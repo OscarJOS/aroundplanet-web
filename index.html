@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Around Planet Racing - Global Championships</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header-card">
+        <h1>🏁 Around Planet Racing</h1>
+        <p class="subtitle">Global Championships • N.Virginia → London → Tokyo → N.Virginia</p>
+        <div class="date-info">
+            <p>📅 <span id="displayDate">Loading...</span></p>
+            <div class="controls">
+                <select id="dateSelect">
+                    <option value="">Today's Races</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- All-Time Records Header -->
+        <div class="records-header">
+            <div class="record-card fastest-overall">
+                <div class="record-title">🏆 Fastest Overall</div>
+                <div class="record-time" id="fastestOverall">Loading...</div>
+                <div class="record-details" id="fastestOverallDetails"></div>
+            </div>
+            <div class="record-grid">
+                <div class="record-card">
+                    <div class="record-title">⚡ N.Virginia → London</div>
+                    <div class="record-time" id="fastestSegment1">--</div>
+                </div>
+                <div class="record-card">
+                    <div class="record-title">⚡ London → Tokyo</div>
+                    <div class="record-time" id="fastestSegment2">--</div>
+                </div>
+                <div class="record-card">
+                    <div class="record-title">⚡ Tokyo → N.Virginia</div>
+                    <div class="record-time" id="fastestSegment3">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Race -->
+        <div class="race-selection">
+            <h2>Daily Race</h2>
+            <div class="hour-grid" id="hourGrid">
+                <p>Select a date to view the race</p>
+            </div>
+        </div>
+
+        <!-- Race Results -->
+        <div class="race-results" id="raceResults" style="display: none;">
+            <div class="race-header">
+                <h2 id="raceTitle">Race Results</h2>
+            </div>
+
+            <!-- Podium -->
+            <div class="podium">
+                <div class="podium-position second" id="position2">
+                    <div class="medal">🥈</div>
+                    <div class="competitor-info">
+                        <div class="competitor-name">--</div>
+                        <div class="competitor-time">--</div>
+                    </div>
+                    <div class="podium-base">2nd</div>
+                </div>
+                <div class="podium-position first" id="position1">
+                    <div class="medal">🥇</div>
+                    <div class="competitor-info">
+                        <div class="competitor-name">--</div>
+                        <div class="competitor-time">--</div>
+                    </div>
+                    <div class="podium-base">1st</div>
+                </div>
+                <div class="podium-position third" id="position3">
+                    <div class="medal">🥉</div>
+                    <div class="competitor-info">
+                        <div class="competitor-name">--</div>
+                        <div class="competitor-time">--</div>
+                    </div>
+                    <div class="podium-base">3rd</div>
+                </div>
+            </div>
+
+            <!-- Full Leaderboard -->
+            <div class="leaderboard">
+                <h3>Full Leaderboard</h3>
+                <div class="leaderboard-table" id="leaderboardTable">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Segment Analysis -->
+            <div class="segment-analysis">
+                <h3>Segment Analysis</h3>
+                <div class="segment-tabs">
+                    <button class="tab-btn active" data-segment="total">Total Time</button>
+                    <button class="tab-btn" data-segment="segment1">N.Virginia → London</button>
+                    <button class="tab-btn" data-segment="segment2">London → Tokyo</button>
+                    <button class="tab-btn" data-segment="segment3">Tokyo → N.Virginia</button>
+                </div>
+                <div class="segment-results" id="segmentResults">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h2>How Racing Works</h2>
+            <div class="explanation-content">
+                <h3>🏁 The Daily Global Championship</h3>
+                <p>Every day at 10:00 AM (UTC-5), 10 competitors race around the planet:</p>
+                <ol>
+                    <li><strong>N.Virginia Start</strong> - Race begins</li>
+                    <li><strong>London Checkpoint</strong> - First international segment</li>
+                    <li><strong>Tokyo Checkpoint</strong> - Asia-Pacific segment</li>
+                    <li><strong>N.Virginia Finish</strong> - Complete the global circuit</li>
+                </ol>
+                <p>Competitors are identified by their UUID ending (1-10). Winners are determined by fastest total time, with segment records tracked separately across all races.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Around Planet Racing - Global Championships</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

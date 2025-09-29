@@ -1,0 +1,556 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    color: #111827;
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    min-height: 100vh;
+}
+
+/* Header */
+.header-card {
+    background: white;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.header-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.header-card h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.date-info {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.date-info p {
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 0.75rem;
+}
+
+.controls select {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 200px;
+    transition: border-color 0.3s ease;
+}
+
+.controls select:focus {
+    outline: none;
+    border-color: #facc15;
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Records Header */
+.records-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.fastest-overall {
+    background: linear-gradient(135deg, #facc15 0%, #eab308 100%);
+    color: #92400e;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #ca8a04;
+    box-shadow: 0 10px 15px -3px rgba(234, 179, 8, 0.2);
+}
+
+.record-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.record-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.record-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.record-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.record-time {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.fastest-overall .record-time {
+    font-size: 2.5rem;
+    color: #92400e;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.record-details {
+    font-size: 0.875rem;
+    color: #92400e;
+    font-weight: 500;
+}
+
+/* Race Selection */
+.race-selection {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.race-selection h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.hour-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.hour-button {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.hour-button:hover {
+    background: #fef3c7;
+    border-color: #facc15;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.hour-button.active {
+    background: #facc15;
+    border-color: #ca8a04;
+    color: #92400e;
+    font-weight: bold;
+}
+
+/* Race Results */
+.race-results {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.race-header h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #111827;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Podium */
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 2rem 0;
+}
+
+.podium-position {
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.podium-position:hover {
+    transform: translateY(-5px);
+}
+
+.podium-position.first {
+    order: 2;
+}
+
+.podium-position.second {
+    order: 1;
+}
+
+.podium-position.third {
+    order: 3;
+}
+
+.medal {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.competitor-info {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    min-width: 150px;
+}
+
+.podium-position.first .competitor-info {
+    background: #fef3c7;
+    border-color: #facc15;
+}
+
+.competitor-name {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.competitor-time {
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.podium-base {
+    background: #374151;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.875rem;
+}
+
+.podium-position.first .podium-base {
+    background: #ca8a04;
+    height: 60px;
+    line-height: 50px;
+}
+
+.podium-position.second .podium-base {
+    background: #6b7280;
+    height: 45px;
+    line-height: 35px;
+}
+
+.podium-position.third .podium-base {
+    background: #9ca3af;
+    height: 30px;
+    line-height: 20px;
+}
+
+/* Leaderboard */
+.leaderboard {
+    margin-top: 2rem;
+}
+
+.leaderboard h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.leaderboard-table {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 2fr 2fr;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.leaderboard-row:hover {
+    background: #f3f4f6;
+}
+
+.leaderboard-row:last-child {
+    border-bottom: none;
+}
+
+.leaderboard-row.top3 {
+    background: #fef3c7;
+    font-weight: 600;
+}
+
+.position {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #374151;
+    text-align: center;
+}
+
+.competitor {
+    font-weight: 600;
+    color: #111827;
+}
+
+.time {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #374151;
+}
+
+.gap {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Segment Analysis */
+.segment-analysis {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e5e7eb;
+}
+
+.segment-analysis h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.segment-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.tab-btn.active {
+    background: #facc15;
+    border-color: #ca8a04;
+    color: #92400e;
+}
+
+.segment-results {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Explanation */
+.explanation {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.explanation h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #facc15;
+    padding-bottom: 0.5rem;
+}
+
+.explanation-content h3 {
+    color: #374151;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.explanation-content ol {
+    margin: 1rem 0 1rem 2rem;
+}
+
+.explanation-content li {
+    margin: 0.5rem 0;
+}
+
+.explanation-content strong {
+    color: #111827;
+}
+
+footer {
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    color: #6b7280;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .records-header {
+        grid-template-columns: 1fr;
+    }
+
+    .record-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .podium {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .podium-position.first {
+        order: 1;
+    }
+
+    .podium-position.second {
+        order: 2;
+    }
+
+    .podium-position.third {
+        order: 3;
+    }
+
+    .segment-tabs {
+        flex-wrap: wrap;
+    }
+
+    .leaderboard-row {
+        grid-template-columns: 50px 1fr 1fr;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .gap {
+        display: none;
+    }
+
+    main {
+        padding: 0.5rem;
+    }
+
+    .header-card {
+        margin: 0.5rem;
+    }
+}
+
+/* Loading and Error States */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.error {
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.race-results {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Microsecond Display */
+.microsecond-display {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #facc15;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
