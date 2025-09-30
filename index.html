@@ -7,56 +7,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header-card">
-        <h1>🏁 Around Planet Racing</h1>
-        <p class="subtitle">Global Championships • N.Virginia → London → Tokyo → N.Virginia</p>
-        <div class="date-info">
-            <p>📅 <span id="displayDate">Loading...</span></p>
-            <div class="controls">
-                <select id="dateSelect">
-                    <option value="">Today's Races</option>
-                </select>
+    <div class="container">
+        <header class="header-card">
+            <h1>🏁 Around Planet Racing</h1>
+            <p class="subtitle">N.Virginia → London → Tokyo → N.Virginia</p>
+            <div class="date-navigation">
+                <h3>📅 Select Race Date</h3>
+                <div class="date-pills" id="datePills">
+                    <!-- Date pills will be populated by JavaScript -->
+                </div>
+                <div class="selected-date-display">
+                    <span class="current-date" id="displayDate">Loading...</span>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <main>
-        <!-- All-Time Records Header -->
-        <div class="records-header">
-            <div class="record-card fastest-overall">
-                <div class="record-title">🏆 Fastest Overall</div>
-                <div class="record-time" id="fastestOverall">Loading...</div>
-                <div class="record-details" id="fastestOverallDetails"></div>
-            </div>
-            <div class="record-grid">
-                <div class="record-card">
-                    <div class="record-title">⚡ N.Virginia → London</div>
-                    <div class="record-time" id="fastestSegment1">--</div>
-                </div>
-                <div class="record-card">
-                    <div class="record-title">⚡ London → Tokyo</div>
-                    <div class="record-time" id="fastestSegment2">--</div>
-                </div>
-                <div class="record-card">
-                    <div class="record-title">⚡ Tokyo → N.Virginia</div>
-                    <div class="record-time" id="fastestSegment3">--</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Daily Race -->
-        <div class="race-selection">
-            <h2>Daily Race</h2>
-            <div class="hour-grid" id="hourGrid">
-                <p>Select a date to view the race</p>
-            </div>
-        </div>
 
         <!-- Race Results -->
         <div class="race-results" id="raceResults" style="display: none;">
-            <div class="race-header">
-                <h2 id="raceTitle">Race Results</h2>
-            </div>
 
             <!-- Podium -->
             <div class="podium">
@@ -86,17 +54,9 @@
                 </div>
             </div>
 
-            <!-- Full Leaderboard -->
-            <div class="leaderboard">
-                <h3>Full Leaderboard</h3>
-                <div class="leaderboard-table" id="leaderboardTable">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </div>
 
             <!-- Segment Analysis -->
             <div class="segment-analysis">
-                <h3>Segment Analysis</h3>
                 <div class="segment-tabs">
                     <button class="tab-btn active" data-segment="total">Total Time</button>
                     <button class="tab-btn" data-segment="segment1">N.Virginia → London</button>
@@ -106,6 +66,42 @@
                 <div class="segment-results" id="segmentResults">
                     <!-- Populated by JavaScript -->
                 </div>
+            </div>
+        </div>
+
+        <!-- All-time Records -->
+        <div class="all-time-records">
+            <h2>All-time Records</h2>
+            <div class="records-content">
+                <div class="record-item">
+                    <div class="record-title">Fastest Overall</div>
+                    <div class="record-time" id="fastestOverall">--</div>
+                    <div class="record-details" id="fastestOverallDetails">--</div>
+                </div>
+                <div class="record-item">
+                    <div class="record-title">N.Virginia → London</div>
+                    <div class="record-time" id="fastestSegment1">--</div>
+                    <div class="record-details" id="fastestSegment1Details">--</div>
+                </div>
+                <div class="record-item">
+                    <div class="record-title">London → Tokyo</div>
+                    <div class="record-time" id="fastestSegment2">--</div>
+                    <div class="record-details" id="fastestSegment2Details">--</div>
+                </div>
+                <div class="record-item">
+                    <div class="record-title">Tokyo → N.Virginia</div>
+                    <div class="record-time" id="fastestSegment3">--</div>
+                    <div class="record-details" id="fastestSegment3Details">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Comparison -->
+        <div class="daily-comparison">
+            <h2>Daily Performance Comparison</h2>
+            <p class="comparison-subtitle">Top 3 times from each race day - Compare performance across all dates</p>
+            <div class="comparison-grid" id="dailyComparisonGrid">
+                <!-- Daily comparison cards will be populated by JavaScript -->
             </div>
         </div>
 
@@ -120,15 +116,34 @@
                     <li><strong>Tokyo Checkpoint</strong> - Asia-Pacific segment</li>
                     <li><strong>N.Virginia Finish</strong> - Complete the global circuit</li>
                 </ol>
-                <p>Competitors are identified by their UUID ending (1-10). Winners are determined by fastest total time, with segment records tracked separately across all races.</p>
+                <p>The competitors start in sequence, with the number indicating their starting position. #1 starts first, and #10 starts last. <strong>It’s not a coincidence that competitor #1 is usually slower — being the very first to run means it triggers a cold start in AWS Lambda.</strong></p>
+                <br>
+                <p>Winners are determined by fastest total time, with segment records tracked separately across all races.</p>
+
+                <hr class="section-divider">
+
+                <h3>⏱️ Understanding Time Measurements</h3>
+                <p>All race times are displayed in <strong>microseconds (μs)</strong> for maximum precision:</p>
+                <div class="time-conversion">
+                    <div class="conversion-item">
+                        <strong>1 second</strong> = 1,000,000 microseconds (μs)
+                    </div>
+                    <div class="conversion-item">
+                        <strong>1 millisecond</strong> = 1,000 microseconds (μs)
+                    </div>
+                    <div class="conversion-examples">
+                        <p><strong>Examples:</strong></p>
+                        <ul>
+                            <li>5,000,000 μs = 5.0 seconds</li>
+                            <li>1,500,000 μs = 1.5 seconds</li>
+                            <li>250,000 μs = 0.25 seconds (250 milliseconds)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer>
-        <p>&copy; 2025 Around Planet Racing - Global Championships</p>
-    </footer>
-
-    <script src="app.js"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>

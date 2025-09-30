@@ -15,7 +15,8 @@ const availableDates = [
     '2025-09-25',
     '2025-09-26',
     '2025-09-27',
-    '2025-09-28'
+    '2025-09-28',
+    '2025-09-29'
 ];
 
 // Initialize the application
@@ -23,45 +24,62 @@ document.addEventListener('DOMContentLoaded', function() {
     populateDateSelector();
     setupEventListeners();
     loadAllTimeRecords();
+    loadDailyComparison();
 });
 
 function populateDateSelector() {
-    const dateSelect = document.getElementById('dateSelect');
+    const datePills = document.getElementById('datePills');
 
     availableDates.forEach(dateStr => {
-        const option = document.createElement('option');
-        option.value = dateStr;
+        const pill = document.createElement('button');
+        pill.className = 'date-pill';
+        pill.dataset.date = dateStr;
 
-        const date = new Date(dateStr + 'T00:00:00Z');
+        const [year, month, day] = dateStr.split('-');
+        const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         const displayDate = date.toLocaleDateString('en-US', {
             weekday: 'short',
             month: 'short',
             day: 'numeric'
         });
 
-        option.textContent = displayDate;
-        dateSelect.appendChild(option);
+        pill.textContent = displayDate;
+        datePills.appendChild(pill);
     });
 
     // Auto-select the most recent date
     if (availableDates.length > 0) {
         const latestDate = availableDates[availableDates.length - 1];
-        dateSelect.value = latestDate;
+        setActiveDatePill(latestDate);
         loadDataForDate(latestDate);
     }
 }
 
-function setupEventListeners() {
-    // Date selection
-    document.getElementById('dateSelect').addEventListener('change', function(e) {
-        const selectedDate = e.target.value;
-        if (selectedDate) {
-            loadDataForDate(selectedDate);
-        }
+function setActiveDatePill(dateStr) {
+    // Remove active class from all pills
+    document.querySelectorAll('.date-pill').forEach(pill => {
+        pill.classList.remove('active');
     });
 
-    // Segment tabs
+    // Add active class to selected pill
+    const activePill = document.querySelector(`[data-date="${dateStr}"]`);
+    if (activePill) {
+        activePill.classList.add('active');
+    }
+}
+
+function setupEventListeners() {
+    // Date pill selection
     document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('date-pill')) {
+            const selectedDate = e.target.dataset.date;
+            if (selectedDate) {
+                setActiveDatePill(selectedDate);
+                loadDataForDate(selectedDate);
+            }
+        }
+
+        // Segment tabs
         if (e.target.classList.contains('tab-btn')) {
             // Remove active class from all tabs
             document.querySelectorAll('.tab-btn').forEach(tab => {
@@ -73,7 +91,6 @@ function setupEventListeners() {
             const segment = e.target.dataset.segment;
             displaySegmentAnalysis(segment);
         }
-
     });
 }
 
@@ -92,7 +109,6 @@ async function loadDataForDate(dateStr) {
             console.log(`Loaded races for ${dateStr}:`, Object.keys(allRaceData).length, 'races');
 
             populateHourGrid();
-            hideRaceResults();
         } else {
             console.error('Failed to load data for date:', dateStr);
             allRaceData = {};
@@ -243,29 +259,36 @@ function updateAllTimeRecords(fastest, segment1, segment2, segment3) {
     const fastestOverallEl = document.getElementById('fastestOverall');
     const fastestOverallDetailsEl = document.getElementById('fastestOverallDetails');
     const fastestSegment1El = document.getElementById('fastestSegment1');
+    const fastestSegment1DetailsEl = document.getElementById('fastestSegment1Details');
     const fastestSegment2El = document.getElementById('fastestSegment2');
+    const fastestSegment2DetailsEl = document.getElementById('fastestSegment2Details');
     const fastestSegment3El = document.getElementById('fastestSegment3');
+    const fastestSegment3DetailsEl = document.getElementById('fastestSegment3Details');
 
     if (fastest) {
         fastestOverallEl.textContent = formatTime(fastest.totalTime);
-        fastestOverallDetailsEl.textContent = `Competitor ${fastest.competitor} • ${formatDate(fastest.date)}`;
+        fastestOverallDetailsEl.textContent = `Racer ${fastest.competitor} • ${formatDate(fastest.date)}`;
     }
 
     if (segment1) {
         fastestSegment1El.textContent = formatTime(segment1.time);
+        fastestSegment1DetailsEl.textContent = `Racer ${segment1.competitor} • ${formatDate(segment1.date)}`;
     }
 
     if (segment2) {
         fastestSegment2El.textContent = formatTime(segment2.time);
+        fastestSegment2DetailsEl.textContent = `Racer ${segment2.competitor} • ${formatDate(segment2.date)}`;
     }
 
     if (segment3) {
         fastestSegment3El.textContent = formatTime(segment3.time);
+        fastestSegment3DetailsEl.textContent = `Racer ${segment3.competitor} • ${formatDate(segment3.date)}`;
     }
 }
 
 function updateDisplayDate(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00Z');
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const displayDate = date.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -276,15 +299,9 @@ function updateDisplayDate(dateStr) {
 }
 
 function populateHourGrid() {
-    const hourGrid = document.getElementById('hourGrid');
-
     if (Object.keys(allRaceData).length === 0) {
-        hourGrid.innerHTML = '<p class="loading">No race available for this date</p>';
         return;
     }
-
-    // Hide the hour grid since we're showing results directly
-    hourGrid.innerHTML = '';
 
     // Automatically display the race results
     displayRaceResults(10);
@@ -295,12 +312,6 @@ function displayRaceResults(hour) {
     if (!raceData) return;
 
     const raceResults = document.getElementById('raceResults');
-    const raceTitle = document.getElementById('raceTitle');
-
-    // Update race title
-    const timeStr = hour <= 12 ? `${hour}:00 AM` : `${hour - 12}:00 PM`;
-    if (hour === 12) timeStr = '12:00 PM';
-    raceTitle.textContent = `${timeStr} Race Results`;
 
     // Show race results
     raceResults.style.display = 'block';
@@ -309,10 +320,8 @@ function displayRaceResults(hour) {
     // Update podium
     updatePodium(raceData.slice(0, 3));
 
-    // Update leaderboard
-    updateLeaderboard(raceData);
-
-    // Update segment analysis (default to total time)
+    // Reset and update segment analysis (default to total time)
+    resetSegmentTabs();
     displaySegmentAnalysis('total', raceData);
 }
 
@@ -327,7 +336,7 @@ function updatePodium(topThree) {
             const nameEl = positionEl.querySelector('.competitor-name');
             const timeEl = positionEl.querySelector('.competitor-time');
 
-            nameEl.textContent = `Competitor ${competitor.competitor}`;
+            nameEl.textContent = `Racer ${competitor.competitor}`;
             timeEl.textContent = formatTime(competitor.totalTime);
 
             positionEl.style.opacity = '1';
@@ -339,28 +348,6 @@ function updatePodium(topThree) {
     });
 }
 
-function updateLeaderboard(raceData) {
-    const leaderboardTable = document.getElementById('leaderboardTable');
-    leaderboardTable.innerHTML = '';
-
-    const winner = raceData[0];
-
-    raceData.forEach((competitor, index) => {
-        const row = document.createElement('div');
-        row.className = `leaderboard-row ${index < 3 ? 'top3' : ''}`;
-
-        const gap = index === 0 ? '--' : `+${formatTime(competitor.totalTime - winner.totalTime)}`;
-
-        row.innerHTML = `
-            <div class="position">${index + 1}</div>
-            <div class="competitor">Competitor ${competitor.competitor}</div>
-            <div class="time">${formatTime(competitor.totalTime)}</div>
-            <div class="gap">${gap}</div>
-        `;
-
-        leaderboardTable.appendChild(row);
-    });
-}
 
 function displaySegmentAnalysis(segment, raceData = null) {
     const currentRace = raceData || getCurrentRaceData();
@@ -403,7 +390,7 @@ function displaySegmentAnalysis(segment, raceData = null) {
 
         row.innerHTML = `
             <div class="position">${index + 1}</div>
-            <div class="competitor">Competitor ${competitor.competitor}</div>
+            <div class="competitor">Racer ${competitor.competitor}</div>
             <div class="time">${formatTime(competitorTime)}</div>
             <div class="gap">${gap}</div>
         `;
@@ -412,13 +399,22 @@ function displaySegmentAnalysis(segment, raceData = null) {
     });
 }
 
-function getCurrentRaceData() {
-    const activeHour = document.querySelector('.hour-button.active');
-    if (activeHour) {
-        const hour = parseInt(activeHour.dataset.hour);
-        return allRaceData[hour];
+function resetSegmentTabs() {
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-btn').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // Add active class to the "Total Time" tab
+    const totalTimeTab = document.querySelector('[data-segment="total"]');
+    if (totalTimeTab) {
+        totalTimeTab.classList.add('active');
     }
-    return null;
+}
+
+function getCurrentRaceData() {
+    // Since we only have one daily race at hour 10, always return that data
+    return allRaceData[10] || null;
 }
 
 function hideRaceResults() {
@@ -436,9 +432,158 @@ function formatTime(microseconds) {
 }
 
 function formatDate(dateStr) {
-    const date = new Date(dateStr + 'T00:00:00Z');
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     return date.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric'
     });
+}
+
+async function loadDailyComparison() {
+    const dailyComparisonGrid = document.getElementById('dailyComparisonGrid');
+    const dailyData = [];
+
+    // Track best segment times across all days
+    let bestSegmentTimes = {
+        segment1: { time: Infinity, date: null, competitor: null },
+        segment2: { time: Infinity, date: null, competitor: null },
+        segment3: { time: Infinity, date: null, competitor: null }
+    };
+
+    // Load data for all available dates
+    for (const dateStr of availableDates) {
+        try {
+            const response = await fetch(`data/tracks-${dateStr}.json`);
+            if (response.ok) {
+                const data = await response.json();
+                const races = processRaceData(data.tracks);
+                const dayData = races[10]; // Get the daily race data
+
+                if (dayData && dayData.length > 0) {
+                    // Get top 3 times for this day
+                    const topThree = dayData.slice(0, 3);
+                    const winnerTime = topThree[0].totalTime;
+
+                    // Check all competitors for best segment times
+                    dayData.forEach(competitor => {
+                        if (competitor.segments && competitor.segments.length >= 3) {
+                            // Check segment 1 (N.Virginia → London)
+                            if (competitor.segments[0].microseconds < bestSegmentTimes.segment1.time) {
+                                bestSegmentTimes.segment1 = {
+                                    time: competitor.segments[0].microseconds,
+                                    date: dateStr,
+                                    competitor: competitor.competitor
+                                };
+                            }
+                            // Check segment 2 (London → Tokyo)
+                            if (competitor.segments[1].microseconds < bestSegmentTimes.segment2.time) {
+                                bestSegmentTimes.segment2 = {
+                                    time: competitor.segments[1].microseconds,
+                                    date: dateStr,
+                                    competitor: competitor.competitor
+                                };
+                            }
+                            // Check segment 3 (Tokyo → N.Virginia)
+                            if (competitor.segments[2].microseconds < bestSegmentTimes.segment3.time) {
+                                bestSegmentTimes.segment3 = {
+                                    time: competitor.segments[2].microseconds,
+                                    date: dateStr,
+                                    competitor: competitor.competitor
+                                };
+                            }
+                        }
+                    });
+
+                    dailyData.push({
+                        date: dateStr,
+                        topThree: topThree,
+                        winnerTime: winnerTime,
+                        formattedDate: formatDateForComparison(dateStr)
+                    });
+                }
+            }
+        } catch (error) {
+            console.error(`Error loading comparison data for ${dateStr}:`, error);
+        }
+    }
+
+    // Sort by winner time to identify best day
+    dailyData.sort((a, b) => a.winnerTime - b.winnerTime);
+    const bestDayTime = dailyData[0]?.winnerTime;
+
+    // Clear and populate the grid
+    dailyComparisonGrid.innerHTML = '';
+
+    dailyData.forEach(dayData => {
+        const isBestDay = dayData.winnerTime === bestDayTime;
+        const card = createDailyCard(dayData, isBestDay, bestSegmentTimes);
+        dailyComparisonGrid.appendChild(card);
+    });
+}
+
+function formatDateForComparison(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    return {
+        short: date.toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric'
+        }),
+        dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'long' })
+    };
+}
+
+function createDailyCard(dayData, isBestDay, bestSegmentTimes) {
+    const card = document.createElement('div');
+    card.className = `daily-card ${isBestDay ? 'best-day' : ''}`;
+
+    const medals = ['🥇', '🥈', '🥉'];
+
+    // Create podium positions with segment highlighting
+    const podiumHTML = dayData.topThree.map((competitor, index) => {
+        let segmentHighlights = '';
+
+        // Check if this competitor has any best segment times
+        if (competitor.segments && competitor.segments.length >= 3) {
+            const hasBestSeg1 = bestSegmentTimes.segment1.date === dayData.date &&
+                               bestSegmentTimes.segment1.competitor === competitor.competitor;
+            const hasBestSeg2 = bestSegmentTimes.segment2.date === dayData.date &&
+                               bestSegmentTimes.segment2.competitor === competitor.competitor;
+            const hasBestSeg3 = bestSegmentTimes.segment3.date === dayData.date &&
+                               bestSegmentTimes.segment3.competitor === competitor.competitor;
+
+            if (hasBestSeg1 || hasBestSeg2 || hasBestSeg3) {
+                const segments = [];
+                if (hasBestSeg1) segments.push('N.VA→LON');
+                if (hasBestSeg2) segments.push('LON→TYO');
+                if (hasBestSeg3) segments.push('TYO→N.VA');
+                segmentHighlights = `<div class="segment-highlights">🟢 Best: ${segments.join(', ')}</div>`;
+            }
+        }
+
+        return `
+            <div class="daily-position">
+                <div class="daily-medal">${medals[index]}</div>
+                <div class="daily-competitor">
+                    Racer ${competitor.competitor}
+                    ${segmentHighlights}
+                </div>
+                <div class="daily-time">${formatTime(competitor.totalTime)}</div>
+            </div>
+        `;
+    }).join('');
+
+    card.innerHTML = `
+        <div class="daily-card-header">
+            <div class="daily-card-date">${dayData.formattedDate.short}</div>
+            <div class="daily-card-rank">${isBestDay ? '🏆 Best Overall Day' : dayData.formattedDate.dayOfWeek}</div>
+        </div>
+        <div class="daily-podium">
+            ${podiumHTML}
+        </div>
+    `;
+
+    return card;
 }
