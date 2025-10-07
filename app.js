@@ -8,45 +8,92 @@ let allTimeRecords = {
     fastestSegment3: null
 };
 
-// Available dates (based on actual data files)
-const availableDates = [
-    '2025-09-23',
-    '2025-09-24',
-    '2025-09-25',
-    '2025-09-26',
-    '2025-09-27',
-    '2025-09-28',
-    '2025-09-29',
-    '2025-09-30'
-];
+// Available dates will be loaded dynamically
+let availableDates = [];
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    await discoverAvailableDates();
     populateDateSelector();
     setupEventListeners();
     loadAllTimeRecords();
     loadDailyComparison();
 });
 
+async function discoverAvailableDates() {
+    const possibleDates = [];
+
+    // Generate possible dates starting from a reasonable start date
+    // Let's start from September 23, 2025 and check forward
+    const startDate = new Date('2025-09-23');
+    const today = new Date();
+
+    // Check dates from start date until today + 1 day
+    const endDate = new Date(today);
+    endDate.setDate(endDate.getDate() + 1); // Check up to 1 day in the future
+
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0];
+        possibleDates.push(dateStr);
+    }
+
+    // Test each date to see if data file exists
+    const existingDates = [];
+
+    for (const dateStr of possibleDates) {
+        try {
+            const response = await fetch(`data/tracks-${dateStr}.json`);
+            if (response.ok) {
+                existingDates.push(dateStr);
+            }
+        } catch (error) {
+            // File doesn't exist, continue
+        }
+    }
+
+    availableDates = existingDates.sort();
+    console.log('Discovered available dates:', availableDates);
+}
+
 function populateDateSelector() {
-    const datePills = document.getElementById('datePills');
+    // Group dates by month
+    const datesByMonth = {};
+    let currentActiveMonth = null;
 
     availableDates.forEach(dateStr => {
-        const pill = document.createElement('button');
-        pill.className = 'date-pill';
-        pill.dataset.date = dateStr;
-
         const [year, month, day] = dateStr.split('-');
         const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-        const displayDate = date.toLocaleDateString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric'
+        const monthKey = `${year}-${month}`;
+        const monthName = date.toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric'
         });
 
-        pill.textContent = displayDate;
-        datePills.appendChild(pill);
+        if (!datesByMonth[monthKey]) {
+            datesByMonth[monthKey] = {
+                name: monthName,
+                dates: []
+            };
+        }
+
+        datesByMonth[monthKey].dates.push({
+            dateStr,
+            displayDate: date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            })
+        });
+
+        // Set the most recent month as active
+        currentActiveMonth = monthKey;
     });
+
+    // Populate month filter buttons
+    populateMonthFilter(datesByMonth, currentActiveMonth);
+
+    // Populate date pills for the active month
+    populateDatePills(datesByMonth[currentActiveMonth]);
 
     // Auto-select the most recent date
     if (availableDates.length > 0) {
@@ -54,6 +101,51 @@ function populateDateSelector() {
         setActiveDatePill(latestDate);
         loadDataForDate(latestDate);
     }
+}
+
+function populateMonthFilter(datesByMonth, activeMonth) {
+    const monthFilter = document.getElementById('monthFilter');
+    monthFilter.innerHTML = '';
+
+    Object.keys(datesByMonth).sort().forEach(monthKey => {
+        const monthData = datesByMonth[monthKey];
+        const monthBtn = document.createElement('button');
+        monthBtn.className = 'month-btn';
+        monthBtn.dataset.month = monthKey;
+        monthBtn.textContent = monthData.name;
+
+        if (monthKey === activeMonth) {
+            monthBtn.classList.add('active');
+        }
+
+        monthBtn.addEventListener('click', () => {
+            // Update active month button
+            document.querySelectorAll('.month-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            monthBtn.classList.add('active');
+
+            // Update date pills for selected month
+            populateDatePills(datesByMonth[monthKey]);
+        });
+
+        monthFilter.appendChild(monthBtn);
+    });
+}
+
+function populateDatePills(monthData) {
+    const datePills = document.getElementById('datePills');
+    datePills.innerHTML = '';
+
+    if (!monthData) return;
+
+    monthData.dates.forEach(({ dateStr, displayDate }) => {
+        const pill = document.createElement('button');
+        pill.className = 'date-pill';
+        pill.dataset.date = dateStr;
+        pill.textContent = displayDate;
+        datePills.appendChild(pill);
+    });
 }
 
 function setActiveDatePill(dateStr) {
@@ -101,6 +193,9 @@ async function loadDataForDate(dateStr) {
     try {
         // Update display date
         updateDisplayDate(dateStr);
+
+        // Update podium title
+        updatePodiumTitle(dateStr);
 
         // Load race data for selected date
         const response = await fetch(`data/tracks-${dateStr}.json`);
@@ -299,6 +394,30 @@ function updateDisplayDate(dateStr) {
     document.getElementById('displayDate').textContent = displayDate;
 }
 
+function updatePodiumTitle(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    const today = new Date();
+
+    // Check if the selected date is today
+    const isToday = date.toDateString() === today.toDateString();
+
+    let title;
+    if (isToday) {
+        title = "🏆 Podium for Today's Race";
+    } else {
+        const formattedDate = date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+        title = `🏆 Podium for ${formattedDate}`;
+    }
+
+    document.getElementById('podiumTitle').textContent = title;
+}
+
 function populateHourGrid() {
     if (Object.keys(allRaceData).length === 0) {
         return;
@@ -442,11 +561,21 @@ function formatDate(dateStr) {
 }
 
 async function loadDailyComparison() {
-    const dailyComparisonGrid = document.getElementById('dailyComparisonGrid');
-    const dailyData = [];
+    // Get all grid containers
+    const totalTimeGrid = document.getElementById('totalTimeGrid');
+    const segment1Grid = document.getElementById('segment1Grid');
+    const segment2Grid = document.getElementById('segment2Grid');
+    const segment3Grid = document.getElementById('segment3Grid');
 
-    // Track best segment times across all days
-    let bestSegmentTimes = {
+    // Initialize data structures for each comparison type
+    const totalTimeData = [];
+    const segment1Data = [];
+    const segment2Data = [];
+    const segment3Data = [];
+
+    // Track best times globally for highlighting
+    let globalBest = {
+        totalTime: { time: Infinity, date: null, competitor: null },
         segment1: { time: Infinity, date: null, competitor: null },
         segment2: { time: Infinity, date: null, competitor: null },
         segment3: { time: Infinity, date: null, competitor: null }
@@ -462,45 +591,74 @@ async function loadDailyComparison() {
                 const dayData = races[10]; // Get the daily race data
 
                 if (dayData && dayData.length > 0) {
-                    // Get top 3 times for this day
-                    const topThree = dayData.slice(0, 3);
-                    const winnerTime = topThree[0].totalTime;
+                    const formattedDate = formatDateForComparison(dateStr);
 
-                    // Check all competitors for best segment times
+                    // Find best performers for each category
+                    const bestTotal = dayData[0]; // Already sorted by total time
+                    let bestSeg1 = dayData[0];
+                    let bestSeg2 = dayData[0];
+                    let bestSeg3 = dayData[0];
+
+                    // Find best segment times for this day
                     dayData.forEach(competitor => {
                         if (competitor.segments && competitor.segments.length >= 3) {
-                            // Check segment 1 (N.Virginia → London)
-                            if (competitor.segments[0].microseconds < bestSegmentTimes.segment1.time) {
-                                bestSegmentTimes.segment1 = {
-                                    time: competitor.segments[0].microseconds,
-                                    date: dateStr,
-                                    competitor: competitor.competitor
-                                };
+                            if (competitor.segments[0].microseconds < bestSeg1.segments[0].microseconds) {
+                                bestSeg1 = competitor;
                             }
-                            // Check segment 2 (London → Tokyo)
-                            if (competitor.segments[1].microseconds < bestSegmentTimes.segment2.time) {
-                                bestSegmentTimes.segment2 = {
-                                    time: competitor.segments[1].microseconds,
-                                    date: dateStr,
-                                    competitor: competitor.competitor
-                                };
+                            if (competitor.segments[1].microseconds < bestSeg2.segments[1].microseconds) {
+                                bestSeg2 = competitor;
                             }
-                            // Check segment 3 (Tokyo → N.Virginia)
-                            if (competitor.segments[2].microseconds < bestSegmentTimes.segment3.time) {
-                                bestSegmentTimes.segment3 = {
-                                    time: competitor.segments[2].microseconds,
-                                    date: dateStr,
-                                    competitor: competitor.competitor
-                                };
+                            if (competitor.segments[2].microseconds < bestSeg3.segments[2].microseconds) {
+                                bestSeg3 = competitor;
+                            }
+
+                            // Update global bests
+                            if (competitor.totalTime < globalBest.totalTime.time) {
+                                globalBest.totalTime = { time: competitor.totalTime, date: dateStr, competitor: competitor.competitor };
+                            }
+                            if (competitor.segments[0].microseconds < globalBest.segment1.time) {
+                                globalBest.segment1 = { time: competitor.segments[0].microseconds, date: dateStr, competitor: competitor.competitor };
+                            }
+                            if (competitor.segments[1].microseconds < globalBest.segment2.time) {
+                                globalBest.segment2 = { time: competitor.segments[1].microseconds, date: dateStr, competitor: competitor.competitor };
+                            }
+                            if (competitor.segments[2].microseconds < globalBest.segment3.time) {
+                                globalBest.segment3 = { time: competitor.segments[2].microseconds, date: dateStr, competitor: competitor.competitor };
                             }
                         }
                     });
 
-                    dailyData.push({
+                    // Add to respective data arrays
+                    totalTimeData.push({
                         date: dateStr,
-                        topThree: topThree,
-                        winnerTime: winnerTime,
-                        formattedDate: formatDateForComparison(dateStr)
+                        formattedDate,
+                        winner: bestTotal,
+                        time: bestTotal.totalTime,
+                        type: 'total'
+                    });
+
+                    segment1Data.push({
+                        date: dateStr,
+                        formattedDate,
+                        winner: bestSeg1,
+                        time: bestSeg1.segments[0].microseconds,
+                        type: 'segment1'
+                    });
+
+                    segment2Data.push({
+                        date: dateStr,
+                        formattedDate,
+                        winner: bestSeg2,
+                        time: bestSeg2.segments[1].microseconds,
+                        type: 'segment2'
+                    });
+
+                    segment3Data.push({
+                        date: dateStr,
+                        formattedDate,
+                        winner: bestSeg3,
+                        time: bestSeg3.segments[2].microseconds,
+                        type: 'segment3'
                     });
                 }
             }
@@ -509,17 +667,27 @@ async function loadDailyComparison() {
         }
     }
 
-    // Sort by winner time to identify best day
-    dailyData.sort((a, b) => a.winnerTime - b.winnerTime);
-    const bestDayTime = dailyData[0]?.winnerTime;
+    // Sort each dataset by performance time
+    totalTimeData.sort((a, b) => a.time - b.time);
+    segment1Data.sort((a, b) => a.time - b.time);
+    segment2Data.sort((a, b) => a.time - b.time);
+    segment3Data.sort((a, b) => a.time - b.time);
 
-    // Clear and populate the grid
-    dailyComparisonGrid.innerHTML = '';
+    // Populate each grid
+    populateComparisonGrid(totalTimeGrid, totalTimeData, globalBest.totalTime);
+    populateComparisonGrid(segment1Grid, segment1Data, globalBest.segment1);
+    populateComparisonGrid(segment2Grid, segment2Data, globalBest.segment2);
+    populateComparisonGrid(segment3Grid, segment3Data, globalBest.segment3);
+}
 
-    dailyData.forEach(dayData => {
-        const isBestDay = dayData.winnerTime === bestDayTime;
-        const card = createDailyCard(dayData, isBestDay, bestSegmentTimes);
-        dailyComparisonGrid.appendChild(card);
+function populateComparisonGrid(grid, data, globalBest) {
+    grid.innerHTML = '';
+
+    data.forEach((dayData, index) => {
+        const isBestOverall = dayData.time === globalBest.time && dayData.date === globalBest.date;
+        const rank = index + 1;
+        const card = createSegmentCard(dayData, isBestOverall, rank);
+        grid.appendChild(card);
     });
 }
 
@@ -536,53 +704,81 @@ function formatDateForComparison(dateStr) {
     };
 }
 
-function createDailyCard(dayData, isBestDay, bestSegmentTimes) {
+function createDailyCard(dayData, isBestDay, bestSegmentTimes, rank) {
     const card = document.createElement('div');
     card.className = `daily-card ${isBestDay ? 'best-day' : ''}`;
 
-    const medals = ['🥇', '🥈', '🥉'];
+    // Get the winner (best time) from the day
+    const winner = dayData.topThree[0];
 
-    // Create podium positions with segment highlighting
-    const podiumHTML = dayData.topThree.map((competitor, index) => {
-        let segmentHighlights = '';
+    // Check if this winner has any best segment times
+    let segmentHighlights = '';
+    if (winner.segments && winner.segments.length >= 3) {
+        const hasBestSeg1 = bestSegmentTimes.segment1.date === dayData.date &&
+                           bestSegmentTimes.segment1.competitor === winner.competitor;
+        const hasBestSeg2 = bestSegmentTimes.segment2.date === dayData.date &&
+                           bestSegmentTimes.segment2.competitor === winner.competitor;
+        const hasBestSeg3 = bestSegmentTimes.segment3.date === dayData.date &&
+                           bestSegmentTimes.segment3.competitor === winner.competitor;
 
-        // Check if this competitor has any best segment times
-        if (competitor.segments && competitor.segments.length >= 3) {
-            const hasBestSeg1 = bestSegmentTimes.segment1.date === dayData.date &&
-                               bestSegmentTimes.segment1.competitor === competitor.competitor;
-            const hasBestSeg2 = bestSegmentTimes.segment2.date === dayData.date &&
-                               bestSegmentTimes.segment2.competitor === competitor.competitor;
-            const hasBestSeg3 = bestSegmentTimes.segment3.date === dayData.date &&
-                               bestSegmentTimes.segment3.competitor === competitor.competitor;
-
-            if (hasBestSeg1 || hasBestSeg2 || hasBestSeg3) {
-                const segments = [];
-                if (hasBestSeg1) segments.push('N.VA→LON');
-                if (hasBestSeg2) segments.push('LON→TYO');
-                if (hasBestSeg3) segments.push('TYO→N.VA');
-                segmentHighlights = `<div class="segment-highlights">🟢 Best: ${segments.join(', ')}</div>`;
-            }
+        if (hasBestSeg1 || hasBestSeg2 || hasBestSeg3) {
+            const segments = [];
+            if (hasBestSeg1) segments.push('N.VA→LON');
+            if (hasBestSeg2) segments.push('LON→TYO');
+            if (hasBestSeg3) segments.push('TYO→N.VA');
+            segmentHighlights = `<div class="segment-highlights">🟢 Best: ${segments.join(', ')}</div>`;
         }
+    }
 
-        return `
-            <div class="daily-position">
-                <div class="daily-medal">${medals[index]}</div>
-                <div class="daily-competitor">
-                    Racer ${competitor.competitor}
-                    ${segmentHighlights}
-                </div>
-                <div class="daily-time">${formatTime(competitor.totalTime)}</div>
-            </div>
-        `;
-    }).join('');
+    // Create ranking badge
+    const getRankBadge = (rank) => {
+        if (rank === 1) return '🥇';
+        if (rank === 2) return '🥈';
+        if (rank === 3) return '🥉';
+        return `#${rank}`;
+    };
 
     card.innerHTML = `
         <div class="daily-card-header">
+            <div class="rank-badge">${getRankBadge(rank)}</div>
             <div class="daily-card-date">${dayData.formattedDate.short}</div>
-            <div class="daily-card-rank">${isBestDay ? '🏆 Best Overall Day' : dayData.formattedDate.dayOfWeek}</div>
+            <div class="daily-card-rank">${isBestDay ? '🏆 Best Overall' : dayData.formattedDate.dayOfWeek}</div>
         </div>
-        <div class="daily-podium">
-            ${podiumHTML}
+        <div class="best-performance">
+            <div class="winner-info">
+                <div class="winner-name">Racer ${winner.competitor}</div>
+                <div class="winner-time">${formatTime(winner.totalTime)}</div>
+                ${segmentHighlights}
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+function createSegmentCard(dayData, isBestOverall, rank) {
+    const card = document.createElement('div');
+    card.className = `daily-card ${isBestOverall ? 'best-day' : ''}`;
+
+    // Create ranking badge
+    const getRankBadge = (rank) => {
+        if (rank === 1) return '🥇';
+        if (rank === 2) return '🥈';
+        if (rank === 3) return '🥉';
+        return `#${rank}`;
+    };
+
+    card.innerHTML = `
+        <div class="daily-card-header">
+            <div class="rank-badge">${getRankBadge(rank)}</div>
+            <div class="daily-card-date">${dayData.formattedDate.short}</div>
+            <div class="daily-card-rank">${isBestOverall ? '🏆 Best Overall' : dayData.formattedDate.dayOfWeek}</div>
+        </div>
+        <div class="best-performance">
+            <div class="winner-info">
+                <div class="winner-name">Racer ${dayData.winner.competitor}</div>
+                <div class="winner-time">${formatTime(dayData.time)}</div>
+            </div>
         </div>
     `;
 

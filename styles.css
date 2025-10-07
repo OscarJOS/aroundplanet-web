@@ -58,12 +58,48 @@ body {
     text-align: center;
 }
 
+.month-filter {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.month-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #fbbf24;
+    border-radius: 8px;
+    background: white;
+    color: #92400e;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.month-btn:hover {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    transform: translateY(-1px);
+}
+
+.month-btn.active {
+    background: #f59e0b;
+    border-color: #d97706;
+    color: white;
+    font-weight: 600;
+}
+
 .date-pills {
     display: flex;
     gap: 0.5rem;
+    justify-content: center;
     margin-bottom: 1rem;
     overflow-x: auto;
     padding: 0.25rem 0;
+    flex-wrap: wrap;
 }
 
 .date-pill {
@@ -131,9 +167,30 @@ main {
     font-size: 1.5rem;
     font-weight: bold;
     color: #111827;
-    margin-bottom: 0.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
     border-bottom: 2px solid #facc15;
     padding-bottom: 0.5rem;
+}
+
+.comparison-section {
+    margin-bottom: 3rem;
+}
+
+.comparison-section:last-child {
+    margin-bottom: 0;
+}
+
+.comparison-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
 }
 
 .comparison-subtitle {
@@ -173,10 +230,31 @@ main {
 }
 
 .daily-card-header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid #e5e7eb;
+}
+
+.rank-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #f59e0b;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.rank-badge:first-child {
+    background: #facc15;
+    color: #92400e;
+    font-size: 1.25rem;
 }
 
 .daily-card-date {
@@ -217,6 +295,46 @@ main {
 .daily-medal {
     font-size: 1.25rem;
     min-width: 24px;
+}
+
+.best-performance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.winner-info {
+    text-align: center;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    width: 100%;
+}
+
+.daily-card.best-day .winner-info {
+    background: #fffbeb;
+    border-color: #fbbf24;
+}
+
+.winner-name {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.winner-time {
+    font-size: 1.25rem;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #f59e0b;
+    margin-bottom: 0.5rem;
+}
+
+.daily-card.best-day .winner-time {
+    color: #92400e;
+    font-size: 1.5rem;
 }
 
 .daily-competitor {
@@ -389,6 +507,17 @@ main {
 }
 
 /* Podium */
+.podium-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111827;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+    border-bottom: 2px solid #facc15;
+    padding-bottom: 0.5rem;
+}
+
 .podium {
     display: flex;
     justify-content: center;
@@ -561,7 +690,9 @@ main {
 .segment-tabs {
     display: flex;
     gap: 0.5rem;
+    justify-content: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .tab-btn {

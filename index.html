@@ -14,6 +14,9 @@
             <p class="subtitle">N.Virginia → London → Tokyo → N.Virginia</p>
             <div class="date-navigation">
                 <h3>📅 Select Race Date</h3>
+                <div class="month-filter" id="monthFilter">
+                    <!-- Month buttons will be populated by JavaScript -->
+                </div>
                 <div class="date-pills" id="datePills">
                     <!-- Date pills will be populated by JavaScript -->
                 </div>
@@ -26,6 +29,7 @@
 
         <!-- Race Results -->
         <div class="race-results" id="raceResults" style="display: none;">
+            <h2 class="podium-title" id="podiumTitle">🏆 Podium for Today's Race</h2>
 
             <!-- Podium -->
             <div class="podium">
@@ -99,10 +103,34 @@
 
         <!-- Daily Comparison -->
         <div class="daily-comparison">
-            <h2>Daily Performance Comparison</h2>
-            <p class="comparison-subtitle">Top 3 times from each race day - Compare performance across all dates</p>
-            <div class="comparison-grid" id="dailyComparisonGrid">
-                <!-- Daily comparison cards will be populated by JavaScript -->
+            <h2>Best Performance Comparison</h2>
+
+            <div class="comparison-section">
+                <h3>🏁 Total Time</h3>
+                <div class="comparison-grid" id="totalTimeGrid">
+                    <!-- Total time comparison cards will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h3>🇺🇸➡️🇬🇧 N.Virginia to London</h3>
+                <div class="comparison-grid" id="segment1Grid">
+                    <!-- Segment 1 comparison cards will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h3>🇬🇧➡️🇯🇵 London to Tokyo</h3>
+                <div class="comparison-grid" id="segment2Grid">
+                    <!-- Segment 2 comparison cards will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h3>🇯🇵➡️🇺🇸 Tokyo to N.Virginia</h3>
+                <div class="comparison-grid" id="segment3Grid">
+                    <!-- Segment 3 comparison cards will be populated by JavaScript -->
+                </div>
             </div>
         </div>
 
