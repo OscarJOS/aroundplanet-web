@@ -1,0 +1,277 @@
+{
+  "date": "2025-11-19",
+  "totalTracks": 10,
+  "hoursActive": 1,
+  "tracks": {
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-1": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-1",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 1,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:20.864103Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.165845Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:24.685644Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:26.988265Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-10": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-10",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 10,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.870181Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:23.194664Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:25.281207Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.442823Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-2": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-2",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 2,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:21.942149Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.464282Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:24.786787Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:26.998159Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-3": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-3",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 3,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.091802Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.500942Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:24.877945Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.168965Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-4": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-4",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 4,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.226076Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.757630Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:24.928402Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.001459Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-5": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-5",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 5,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.334651Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.694889Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:25.020386Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.054979Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-6": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-6",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 6,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.444331Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.877365Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:24.989926Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.151224Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-7": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-7",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 7,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.549320Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:22.872568Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:25.052177Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.020664Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-8": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-8",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 8,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.655280Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:23.082373Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:25.467160Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.597688Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    },
+    "96d11b3f-a7fe-42ab-832d-21233a1d26f6-9": {
+      "uuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6-9",
+      "baseUuid": "96d11b3f-a7fe-42ab-832d-21233a1d26f6",
+      "trackNumber": 9,
+      "journey": [
+        {
+          "region": "N.Virginia Start",
+          "datetime": "2025-11-19T10:00:22.760001Z",
+          "source": "Go-s3-start"
+        },
+        {
+          "region": "London",
+          "datetime": "2025-11-19T10:00:23.111677Z",
+          "source": "Go-s3-London"
+        },
+        {
+          "region": "Tokyo",
+          "datetime": "2025-11-19T10:00:25.279939Z",
+          "source": "Go-s3-Tokio"
+        },
+        {
+          "region": "N.Virginia End",
+          "datetime": "2025-11-19T10:00:27.261101Z",
+          "source": "Go-s3-end"
+        }
+      ]
+    }
+  }
+}
